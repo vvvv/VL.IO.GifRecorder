@@ -4,3 +4,8 @@
 
 # Dynamic plugins .dll
 bin/
+
+/.vl/
+/src/.vs/
+/src/obj/
+/lib/
