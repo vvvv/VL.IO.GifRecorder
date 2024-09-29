@@ -96,7 +96,7 @@ namespace Moments.Encoder
 				SetSize(frame.Width, frame.Height);
 
 			m_CurrentFrame = frame;
-			GetImagePixels();
+			GetImagePixels(frame.PixelOrderIsRGB);
 			AnalyzePixels();
 
 			if (m_IsFirstFrame)
@@ -203,7 +203,7 @@ namespace Moments.Encoder
 		}
 
 		// Extracts image pixels into byte array "pixels".
-		protected void GetImagePixels()
+		protected void GetImagePixels(bool isRGB)
 		{
 			m_Pixels = new Byte[3 * m_CurrentFrame.Width * m_CurrentFrame.Height];
 			byte[] p = m_CurrentFrame.Data;
@@ -215,10 +215,19 @@ namespace Moments.Encoder
 			{
 				for (int tw = 0; tw < m_CurrentFrame.Width; tw++)
 				{
-					m_Pixels[dstP] = p[srcP]; dstP++; srcP++;
-					m_Pixels[dstP] = p[srcP]; dstP++; srcP++;
-					m_Pixels[dstP] = p[srcP]; dstP++; srcP++; srcP++;
-				}
+					if (isRGB) //pixel order is rgb
+					{
+						m_Pixels[dstP] = p[srcP]; dstP++; srcP++;
+						m_Pixels[dstP] = p[srcP]; dstP++; srcP++;
+						m_Pixels[dstP] = p[srcP]; dstP++; srcP++; srcP++;
+					}
+                    else //pixel order is bgr
+                    {
+                        m_Pixels[dstP] = p[srcP+2]; dstP++; srcP++;
+                        m_Pixels[dstP] = p[srcP]; dstP++; srcP++;
+                        m_Pixels[dstP] = p[srcP-2]; dstP++; srcP++; srcP++;
+                    }
+                }
 			}
 		}
 
